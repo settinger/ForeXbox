@@ -50,28 +50,25 @@ const update = (event) => {
   // Set currency type
   $("currencyUnit").innerText = country.currency(year);
 
+  let money = new Intl.NumberFormat();
   // Get that year's value in USD
   let USD = new Intl.NumberFormat(undefined, {
     style: "currency",
     currency: "USD"
   });
-  let oldUSD = USD.format(payout * country.xr(year));
-
+  let UsdOld = USD.format(payout / country.xr(year));
+  let Usd2001 = USD.format(payout / country.xr(year) * CPI(year));
+  let boxen = payout / country.xr(year) * CPI(year) / 299.99;
+  $("tldr").innerText = boxen.toFixed(2) + " Xboxes"
   $("xboxen").innerHTML = `
 <p>
-  In ${year}, one U.S. dollar was worth roughly ${country
-    .xr(year)
-    .toFixed(2)} ${country.currency(year)}.
+  In ${year}, one U.S. dollar was worth roughly <b>${money.format(country.xr(year))} ${country.currency(year)}</b>. A payout of ${money.format(payout)} ${country.currency(year)} was equivalent to <b>USD ${UsdOld}</b> in ${year}.
 </p>
 <p>
-  A payout of ${payout} ${country.currency(
-    year
-  )} was equivalent to USD ${oldUSD} in ${year}.
+  In 2001, the U.S. Consumer Price Index (USCPI) was ${CPI(year).toFixed(3)} times the USCPI of ${year}. Therefore the payout in ${year} was equivalent to <b>${Usd2001}</b> in 2001.
 </p>
 <p>
-  In 2001, the U.S. Consumer Price Index (USCPI) was ${CPI(year).toFixed(
-    3
-  )} times the USCPI of ${year}.
+  At the North America launch in 2001, a first-generation Xbox cost $299.99. The payout would pay for <b>${boxen.toFixed(2)} Xboxes</b>.
 </p>
 `;
 };
